@@ -1,0 +1,95 @@
+{
+  "output" :
+  {
+      "output-format"         : "HDF5",
+      "directory" : "./T=TEMP/",
+      "filename-ed"  : "data_ed.hdf5",
+      "filename-qmc" : "data.ALGORITHM_sp.hdf5",
+      "spectrum-file"         : "data.CPE.hdf5",
+      "susceptibilities-file" : "data.BSE.hdf5"  
+      "dump-cluster-Greens-functions": true
+  },
+    
+    "physics": {
+	"beta"                      :  BETA,
+	"chemical-potential"        : 0
+	"adjust-chemical-potential" : "true",
+	"density"                   :  DENS
+    },
+
+    "FeAs-model" :
+    {
+	"t1"       : 0,
+	"t2"       : 0,
+	"t3" : 0,
+	"t4" : 0,
+	"U" : 4,
+	"V" : 2,
+	"Jh" : 1
+    },
+
+
+    "CT-INT" :
+    {
+	"double-update-probability" : 1,
+	"initial-configuration-size" :100,
+	"alpha-dd-pos" : 0.501,
+	"alpha-dd-neg" : 0.,
+	"alpha-ndd" : 0.0001,
+	"compute-error-bar" : false
+    },
+
+  "domains": {
+    "real-space-grids": {
+      "cluster": [[3, 0],
+        [0, 3]],
+        "sp-host": [[8, 8],
+                    [8,-8]]
+    },
+      "imaginary-time": {
+	  "sp-time-intervals": 256
+      },
+      
+      
+      "imaginary-frequency": {
+	  "sp-fermionic-frequencies": 256,
+	  "four-point-fermionic-frequencies" : 16
+      }
+  },
+    
+    "DCA" : {
+	"interacting-orbitals" : [0,1]
+	
+	"iterations": 5,
+	"self-energy-mixing-factor": 0.75,
+	"coarse-graining": {
+	    "k-mesh-recursion": 3,
+	    "periods": 2,
+	    "quadrature-rule": 1,
+	    "threads": 32
+	},
+	
+	"DCA+": {
+            "do-DCA+": true,
+            "deconvolution-iterations": 16,
+            "deconvolution-tolerance": 0.01
+	}
+    },
+    
+    "Monte-Carlo-integration" :
+    {
+	"warm-up-sweeps"         : 100,
+	"sweeps-per-measurement" : 1,
+	"measurements-per-process-and-accumulator" : 10000,
+	
+	"seed" : SEED
+
+	"threaded-solver" : {
+	    "walkers": 12,
+	    "accumulators": 12,
+	    "shared-walk-and-accumulation-thread": true
+	},
+
+
+  }
+}
