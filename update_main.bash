@@ -2,7 +2,7 @@
 DCA_ROOT='../'
 
 if [[ ! -z $1 ]]; then
-    DCA_ROOT = $1
+    DCA_ROOT=$1
 fi
 
 make -j -C ${DCA_ROOT}/applications/dca && cp ../applications/dca/main_dca ./
