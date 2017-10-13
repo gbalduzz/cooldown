@@ -1,7 +1,6 @@
 import os
 import math
 
-section = "dca"  # "dca"|"analysis"
 algorithm = "DCA+"  # "DCA+"|"DCA"
 
 # Parameters
@@ -63,7 +62,8 @@ def prepare_input_file(filename, T_ind):
     file.close()
 
 
-batch_str = ''
+dca_batch_str = ''
+analysis_batch_str = ''
 srun_str = 'srun -n $SLURM_NTASKS  -c $SLURM_CPUS_PER_TASK '
 
 for T_ind, T in enumerate(temps):
@@ -80,48 +80,48 @@ for T_ind, T in enumerate(temps):
     data_dca_tp   = dirname + "/data."+algorithm+"_tp.hdf5"
     data_analysis = dirname + "/data.BSE.hdf5"
 
+    section = "dca"
     # dca sp
-    if (section == "dca" and not os.path.exists(data_dca_sp)):
+    if (not os.path.exists(data_dca_sp)):
         cmd = "cp ./input.sp.json.in " + input_sp
         os.system(cmd)
         prepare_input_file(input_sp, T_ind)
         outname = dirname + "/out.sp.txt"
-        batch_str += "echo \"start sp T = " + str(T) + "  $(date)\" \n"
-        batch_str = batch_str + srun_str + " ./main_dca " + input_sp + " > " + outname + "\n"
+        dca_batch_str += "echo \"start sp T = " + str(T) + "  $(date)\" \n"
+        dca_batch_str += srun_str + " ./main_dca " + input_sp + " > " + outname + "\n"
 
     # dca tp
-    if (section == "dca" and T<=T_start_analysis and not os.path.exists(data_dca_tp)):
+    do_tp = 0
+    if (T<=T_start_analysis and not os.path.exists(data_dca_tp)):
+        do_tp = 1
         cmd = "cp ./input.tp.json.in " + input_tp
         os.system(cmd)
         prepare_input_file(input_tp, T_ind)
         outname = dirname + "/out.tp.txt"
-        batch_str += "echo \"start tp T = " + str(T) + "  $(date)\" \n"
-        batch_str = batch_str + srun_str + " ./main_dca " + input_tp + " > " + outname + "\n"
+        dca_batch_str += "echo \"start tp T = " + str(T) + "  $(date)\" \n"
+        dca_batch_str += srun_str + " ./main_dca " + input_tp + " > " + outname + "\n"
 
     # analysis
-    if (section == "analysis" and os.path.exists(data_dca_tp) and not os.path.exists(data_analysis)):
+    section = "analysis"
+    if (do_tp and not os.path.exists(data_analysis)):
         outname = dirname + "/out.analysis.txt"
-        batch_str = batch_str + srun_str + " ./main_analysis " + input_tp + " > " + outname + "\n"
+        analysis_batch_str +=  srun_str + " ./main_analysis " + input_tp + " > " + outname + "\n"
 
-if (section == "dca"):
-    file = open("job.dca.slm.in", "r")
+
+job_names = ["dca", "analysis"]
+for name in job_names:
+    file = open("job."+ name +".slm.in", "r")
     text = file.read()
     file.close()
     
-    batch_script_name = "job.fe_as.dca_"+algorithm+".slm"
+    batch_script_name = "job.fe_as."+ name + "_"+algorithm+".slm"
+    batch_str = dca_batch_str if name == "dca" else analysis_batch_str
         
-elif (section == "analysis"):
-    file = open("job.analysis.slm.in", "r")
-    text = file.read()
-    file.close()
-    
-    batch_script_name = "job.fe_as.analysis_"+algorithm+".slm"
-    
-text = text.replace("DENS", str(d))
-text = text.replace("SIZE", str(Nc))
-text = text.replace("ALGORITHM", algorithm)
-text = text.replace("JOBS", batch_str)
+    text = text.replace("DENS", str(d))
+    text = text.replace("SIZE", str(Nc))
+    text = text.replace("ALGORITHM", algorithm)
+    text = text.replace("JOBS", batch_str)
 
-file = open(batch_script_name, "w")
-file.write(text)
-file.close()
+    file = open(batch_script_name, "w")
+    file.write(text)
+    file.close()

@@ -1,1 +1,9 @@
-make -j -C ../applications/dca && cp ../applications/dca/main_dca ./
+# usage: update_main.bash <dca_build_root>
+DCA_ROOT='../'
+
+if [[ $# -eq 2 ]]; then
+    DCA_ROOT = $1
+fi
+
+make -j -C ${DCA_ROOT}/applications/dca && cp ../applications/dca/main_dca ./
+make -j -C ${DCA_ROOT}/applications/analysis && cp ../applications/analysis/main_analysis ./
