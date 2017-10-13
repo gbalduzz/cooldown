@@ -27,28 +27,24 @@ Nc=9
 def my_format(x):
     return ("%.6g" % x)
 
-def prepare_input_file(filename, T_ind):
+def prepare_input_file(filename, T, input_data = "zero"):
     file = open(filename, "r")
     text = file.read()
     file.close()
 
     text = text.replace("ALGORITHM", algorithm)
     
-    if (T_ind == 0):
-        text = text.replace("./T=PREVIOUS_TEMP/data."+algorithm+"_sp.hdf5", "zero")
-    else:
-        text = text.replace("PREVIOUS_TEMP", str(temps[T_ind-1]))
-
-    text = text.replace("TEMP", str(temps[T_ind]))
+    text = text.replace("INPUT_DATA", input_data)
+    text = text.replace("TEMP", str(T))
         
-    text = text.replace("BETA", str(my_format(1./temps[T_ind])))
+    text = text.replace("BETA", str(my_format(1./T)))
     text = text.replace("DENS", str(d))
 
     global global_seed
     text = text.replace("SEED", str(global_seed))
     global_seed += 1
         
-    if (temps[T_ind] >= 1.0):
+    if (T >= 1.0):
         text = text.replace("ITERS", "8")
     else:
         text = text.replace("ITERS", "3")
@@ -73,7 +69,8 @@ dca_batch_str = ''
 analysis_batch_str = ''
 srun_str = 'srun -n $SLURM_NTASKS  -c $SLURM_CPUS_PER_TASK '
 
-for T_ind, T in enumerate(temps):
+input_data = 'zero'
+for T in temps:
     print my_format(T)
     dirname = "./T=" + str(T)
     if (not os.path.exists(dirname)):
@@ -92,7 +89,9 @@ for T_ind, T in enumerate(temps):
     if (not os.path.exists(data_dca_sp)):
         cmd = "cp ./input.sp.json.in " + input_sp
         os.system(cmd)
-        prepare_input_file(input_sp, T_ind)
+        prepare_input_file(input_sp, T, input_data)
+        input_data = data_dca_sp
+
         outname = dirname + "/out.sp.txt"
         dca_batch_str += "echo \"start sp T = " + str(T) + "  $(date)\" \n"
         dca_batch_str += srun_str + " ./main_dca " + input_sp + " > " + outname + "\n"
@@ -103,7 +102,9 @@ for T_ind, T in enumerate(temps):
         do_tp = 1
         cmd = "cp ./input.tp.json.in " + input_tp
         os.system(cmd)
-        prepare_input_file(input_tp, T_ind)
+        prepare_input_file(input_tp, T, input_data)
+        input_data = data_dca_tp
+
         outname = dirname + "/out.tp.txt"
         dca_batch_str += "echo \"start tp T = " + str(T) + "  $(date)\" \n"
         dca_batch_str += srun_str + " ./main_dca " + input_tp + " > " + outname + "\n"

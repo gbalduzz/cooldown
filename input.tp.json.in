@@ -64,6 +64,8 @@
     },
 
     "DCA" : {
+	"initial-self-energy" : "INPUT_DATA",
+
 	"interacting-orbitals" : [0,1],
 
 	"iterations": 5,
