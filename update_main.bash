@@ -1,7 +1,7 @@
-# usage: update_main.bash <dca_build_root>
+# usage: update_main.bash [dca_build_root]
 DCA_ROOT='../'
 
-if [[ $# -eq 2 ]]; then
+if [[ ! -z $1 ]]; then
     DCA_ROOT = $1
 fi
 

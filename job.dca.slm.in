@@ -8,7 +8,6 @@
 #SBATCH --output=out.fe_as.dca_ALGORITHM.%j.txt
 #SBATCH --error=err.fe_as.dca_ALGORITHM.%j.txt
 
-export OMP_NUM_THREADS=$SLURM_NTASKS_PER_NODE
 export CRAY_CUDA_MPS=1
 
 module load daint-gpu
