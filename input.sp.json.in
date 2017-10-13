@@ -2,7 +2,7 @@
   "output" :
   {
       "output-format"         : "HDF5",
-      "directory" : "./T=TEMP/",
+      "directory" : "./T_TEMP/",
       "filename-ed"  : "data_ed.hdf5",
       "filename-qmc" : "data.ALGORITHM_sp.hdf5",
       "spectrum-file"         : "data.CPE.hdf5",

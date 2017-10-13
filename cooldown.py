@@ -72,7 +72,7 @@ srun_str = 'srun -n $SLURM_NTASKS  -c $SLURM_CPUS_PER_TASK '
 input_data = 'zero'
 for T in temps:
     print my_format(T)
-    dirname = "./T=" + str(T)
+    dirname = "./T_" + str(T)
     if (not os.path.exists(dirname)):
         cmd = "mkdir " + dirname
         os.system(cmd)
