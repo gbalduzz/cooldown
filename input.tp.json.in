@@ -41,8 +41,8 @@
 
   "domains": {
     "real-space-grids": {
-      "cluster": [[3, 0],
-        [0, 3]],
+      "cluster": [[2, 0],
+        [0, 2]],
         "sp-host": [[8, 8],
                     [8,-8]]
     },
