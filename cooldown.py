@@ -3,9 +3,11 @@ import math
 
 algorithm = "DCA+"  # "DCA+"|"DCA"
 
+##################################################################
 # Parameters
 d = 2.00
 period = 2
+global_seed = 0
 
 temps = [1,  0.5,  0.25, 0.1, 0.05, 0.025, .01]
 T_start_analysis = 0.25  # Starting temperature for computing two-particle quantities and doing the analysis.
@@ -17,12 +19,14 @@ qvec = [0, 0]
 sigma_cutoff = 0.5
 radius_cutoff = 1.5
 
+# pysics parameters
+U=4
+Nc=9
+##################################################################
 
 def my_format(x):
     return ("%.6g" % x)
 
-U=4
-Nc=9
 def prepare_input_file(filename, T_ind):
     file = open(filename, "r")
     text = file.read()
@@ -40,14 +44,17 @@ def prepare_input_file(filename, T_ind):
     text = text.replace("BETA", str(my_format(1./temps[T_ind])))
     text = text.replace("DENS", str(d))
 
+    global global_seed
+    text = text.replace("SEED", str(global_seed))
+    global_seed += 1
         
     if (temps[T_ind] >= 1.0):
         text = text.replace("ITERS", "8")
     else:
         text = text.replace("ITERS", "3")
 
-#    text = text.replace("VECX", str(vecx))
- #   text = text.replace("VECY", str(vecy))
+    #text = text.replace("VECX", str(vecx))
+    #text = text.replace("VECY", str(vecy))
 
     text = text.replace("PERIOD", str(period))
 
