@@ -9,7 +9,7 @@ d = 2.00
 period = 2
 
 temps = [1,  0.5,  0.25, 0.1, 0.05, 0.025, .01]
-T_start_analysis = 0.1  # Starting temperature for computing two-particle quantities and doing the analysis.
+T_start_analysis = 0.25  # Starting temperature for computing two-particle quantities and doing the analysis.
 
 
 channel = "PARTICLE_PARTICLE_UP_DOWN"
@@ -68,39 +68,40 @@ srun_str = 'srun -n $SLURM_NTASKS  -c $SLURM_CPUS_PER_TASK '
 
 for T_ind, T in enumerate(temps):
     print my_format(T)
-
-    if (not os.path.exists("./T=" + str(T))):
-        cmd = "mkdir T=" + str(temps[T_ind])
+    dirname = "./T=" + str(T)
+    if (not os.path.exists(dirname)):
+        cmd = "mkdir " + dirname
         os.system(cmd)
 
-    dir_str = "./T=" + str(T)
+    input_tp = dirname + "/input_tp.json"
+    input_sp = dirname + "/input.sp.json"
 
-    input_tp = dir_str + "/input_tp.json"
-    input_sp = dir_str + "/input.sp.json"
-
-    data_dca_sp   = dir_str + "/data."+algorithm+"_sp.hdf5"
-    data_dca_tp   = dir_str + "/data."+algorithm+"_tp.hdf5"
-    data_analysis = dir_str + "/data.BSE.hdf5"
+    data_dca_sp   = dirname + "/data."+algorithm+"_sp.hdf5"
+    data_dca_tp   = dirname + "/data."+algorithm+"_tp.hdf5"
+    data_analysis = dirname + "/data.BSE.hdf5"
 
     # dca sp
     if (section == "dca" and not os.path.exists(data_dca_sp)):
         cmd = "cp ./input.sp.json.in " + input_sp
         os.system(cmd)
         prepare_input_file(input_sp, T_ind)
-
-        batch_str = batch_str + srun_str + " ./main_dca " + input_sp + "\n"
+        outname = dirname + "/out.sp.txt"
+        batch_str += "echo \"start sp T = " + str(T) + "  $(date)\" \n"
+        batch_str = batch_str + srun_str + " ./main_dca " + input_sp + " > " + outname + "\n"
 
     # dca tp
     if (section == "dca" and T<=T_start_analysis and not os.path.exists(data_dca_tp)):
         cmd = "cp ./input.tp.json.in " + input_tp
         os.system(cmd)
         prepare_input_file(input_tp, T_ind)
-
-        batch_str = batch_str + srun_str + " ./main_dca " + input_tp + "\n"
+        outname = dirname + "/out.tp.txt"
+        batch_str += "echo \"start tp T = " + str(T) + "  $(date)\" \n"
+        batch_str = batch_str + srun_str + " ./main_dca " + input_tp + " > " + outname + "\n"
 
     # analysis
     if (section == "analysis" and os.path.exists(data_dca_tp) and not os.path.exists(data_analysis)):
-        batch_str = batch_str + srun_str + " ./main_analysis " + input_tp + "\n"
+        outname = dirname + "/out.analysis.txt"
+        batch_str = batch_str + srun_str + " ./main_analysis " + input_tp + " > " + outname + "\n"
 
 if (section == "dca"):
     file = open("job.dca.slm.in", "r")
