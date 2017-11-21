@@ -84,6 +84,17 @@
         "additional-time-measurements": false
     },
 
+    "CT-INT" :
+    {
+        "double-update-probability" : 0,
+        "initial-configuration-size" :64,
+        "alpha-dd-pos" : 0.501,
+        "alpha-dd-neg" : 0.,
+        "alpha-ndd" : 0.0001,
+        "compute-error-bar" : true
+    },
+    
+
     "four-point": {
         "type": "PARTICLE_PARTICLE_UP_DOWN",
         "momentum-transfer": [0., 0.],
