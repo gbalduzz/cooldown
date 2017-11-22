@@ -119,7 +119,7 @@ for T_ind, T in enumerate(temps):
     prepare_input_file(input_sp, T_ind)
 
     # Add job.
-    batch_str_dca = batch_str_dca + run_command_dca + ' ../main_dca ' + input_sp + '\n'
+    batch_str_dca = batch_str_dca + run_command_dca + ' ./main_dca ' + input_sp + '\n'
 
     if (T <= T_analysis):
         # dca tp
@@ -129,11 +129,11 @@ for T_ind, T in enumerate(temps):
         prepare_input_file(input_tp, T_ind)
 
         # Add job.
-        batch_str_dca = batch_str_dca + run_command_dca + ' ../main_dca ' + input_tp + '\n'
+        batch_str_dca = batch_str_dca + run_command_dca + ' ./main_dca ' + input_tp + '\n'
 
         # analysis
         # Add job.
-        batch_str_analysis = batch_str_analysis + run_command_analysis + ' ../main_analysis ' + input_tp + '\n'
+        batch_str_analysis = batch_str_analysis + run_command_analysis + ' ./main_analysis ' + input_tp + '\n'
 
 
 # Get filename extension of batch script.
