@@ -16,9 +16,16 @@
         "adjust-chemical-potential": true
     },
 
-    "single-band-Hubbard-model": {
-        "t": 1.,
-        "U": HUBBARDU
+
+    "FeAs-model" :
+    {
+        "t1"       : 1,
+        "t2"       : 1,
+        "t3" : 1,
+        "t4" : 1,
+        "U" : 4,
+        "V" : 2,
+        "J" : 1
     },
 
     "DCA": {
@@ -66,19 +73,19 @@
     "Monte-Carlo-integration": {
         "seed": 985456376,
         "warm-up-sweeps": 100,
-        "sweeps-per-measurement": 4.,
-	"measurements-per-process-and-accumulator" : 200,
+        "sweeps-per-measurement": 2,
+	"measurements-per-process-and-accumulator" : 500,
 
         "threaded-solver": {
-            "walkers": 20,
-            "accumulators": 20,
+            "walkers": 36,
+            "accumulators": 36,
 	    "shared-walk-and-accumulation-thread" : true
         }
     },
 
     "CT-AUX": {
         "expansion-parameter-K": 1.,
-        "initial-configuration-size": 64,
+        "initial-configuration-size": 128,
         "initial-matrix-size": 128,
         "max-submatrix-size": 128,
         "neglect-Bennett-updates": false,
@@ -87,11 +94,11 @@
 
     "CT-INT" :
     {
-        "double-update-probability" : 0,
-        "initial-configuration-size" :64,
+        "double-update-probability" : 0.8,
+        "initial-configuration-size" :128,
         "alpha-dd-pos" : 0.501,
-        "alpha-dd-neg" : 0.,
-        "alpha-ndd" : 0.,
+        "alpha-dd-neg" : 0.501,
+        "alpha-ndd" : 0.0001,
         "compute-error-bar" : false
     },
     
