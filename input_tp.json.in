@@ -67,12 +67,12 @@
         "seed": 985456376,
         "warm-up-sweeps": 100,
         "sweeps-per-measurement": 4.,
-        "measurements-per-process": 4000,
+	"measurements-per-process-and-accumulator" : 200,
 
         "threaded-solver": {
-            "walkers": 2,
+            "walkers": 20,
             "accumulators": 20,
-	    "max-queue-size" : 40
+	    "shared-walk-and-accumulation-thread" : true
         }
     },
 
@@ -91,8 +91,8 @@
         "initial-configuration-size" :64,
         "alpha-dd-pos" : 0.501,
         "alpha-dd-neg" : 0.,
-        "alpha-ndd" : 0.0001,
-        "compute-error-bar" : true
+        "alpha-ndd" : 0.,
+        "compute-error-bar" : false
     },
     
 
